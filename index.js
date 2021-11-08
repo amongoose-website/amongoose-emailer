@@ -7,7 +7,7 @@
 require('dotenv').config();
 
 // Import app
-const app = require('./src/app');
+const app = require('./app');
 
 // Start server
 app.startServer();

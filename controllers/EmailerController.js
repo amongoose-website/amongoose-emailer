@@ -15,12 +15,12 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 class EmailerController {
     static loadBcc() {
-        return require('../../db/bcc.json');
+        return require('../db/bcc.json');
     }
 
     static saveBcc(object) {
         const jsonString = JSON.stringify(object, null, 4);
-        fs.writeFileSync(path.join(__dirname, '../../db/bcc.json'), jsonString);
+        fs.writeFileSync(path.join(__dirname, '../db/bcc.json'), jsonString);
     }
 
     static subscribeBcc(name, email) {
@@ -32,9 +32,10 @@ class EmailerController {
 
     static unsubscribeBcc(email) {
         let bcc = EmailerController.loadBcc();
+        const found = bcc.some(item => item.email === email);
         bcc = bcc.filter(item => item.email !== email);
         EmailerController.saveBcc(bcc);
-        return bcc;
+        return found;
     }
 
     static templateEmail(data) {
@@ -108,12 +109,17 @@ class EmailerController {
 
     static async unsubscribe(req, res) {
         const { email } = req.body;
-        if (!email) res.status(401).end();
+        if (!email) return res.redirect('/emailer/unsubscribe');
 
-        EmailerController.unsubscribeBcc(email);
-        Logger.info('Unsubscription', `${email} unsubscribed`);
+        if (EmailerController.unsubscribeBcc(email)) {
+            Logger.info('Unsubscription', `${email} unsubscribed`);
+        }
 
-        res.status(200).end();
+        res.redirect(`/emailer/unsubscribe?done=true&email=${email}`);
+    }
+
+    static unsubscribePage(req, res) {
+        res.render('unsubscribe', { query: req.query });
     }
 }
 

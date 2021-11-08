@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital@0;1&display=swap');
+
+/*
+ Layout
+*/
+
+body.center-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+@media (min-width: 721px) {
+    .container {
+        width: 60%;
+    }
+}
+
+.flex {display: flex;}
+.flex-col {display: flex; flex-direction: column;}
+
+/*
+ Styling
+ */
+
+* {
+    font-family: 'Open Sans';
+}
+
+p.info {
+    text-align: center;
+    font-size: 1.3rem;
+}
+
+@media (min-width: 721px) {
+    p.info {
+        font-size: 1.5rem;
+    }   
+}
+
+p.tryAgain {
+    font-style: italic;
+    text-align: center;
+    a {
+        color: rgb(199, 20, 20);
+    }
+    a:hover {
+        color: rgb(106, 106, 106)
+    }
+}
+
+.primaryTextbox {
+    border: 1px solid black;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0.2rem;
+    outline: none;
+}
+
+.primaryButton {
+    background-color: rgb(199, 20, 20);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 900;
+    border: solid 1px rgb(148, 35, 35);
+    border-radius: 0px;
+    padding: 0.5rem 1rem;
+    transition: all 0.5s;
+}
+
+.primaryButton:hover {
+    background: none;
+    border: solid 1px rgb(199, 20, 20);
+    color: rgb(199, 20, 20);
+}

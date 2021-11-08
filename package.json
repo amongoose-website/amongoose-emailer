@@ -4,8 +4,9 @@
   "description": "Node emailer for amongoose.com",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon .",
-    "start": "node ."
+    "dev": "nodemon . & npm run scss",
+    "start": "node .",
+    "scss": "sass --watch public/scss/main.scss public/css/index.css"
   },
   "author": "Joshua Grimmett",
   "license": "ISC",
@@ -19,6 +20,8 @@
     "express": "^4.17.1",
     "express-pug": "^1.0.0",
     "moment": "^2.29.1",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "sass": "^1.43.4",
+    "scss": "^0.2.4"
   }
 }

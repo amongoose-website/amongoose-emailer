@@ -1,0 +1,14 @@
+head
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet", href="/css/index.css")
+body.center-all
+    .container
+        unless query['done']
+            p.info Enter your email to unsubscribe from future emails.
+            form(action="/emailer/unsubscribe", method="post")
+                .flex-col
+                    input.primaryTextbox#email(type="text", name="email", placeholder="Email")
+                    input.primaryButton(type="submit", value="Unsubscribe")
+        else
+            p.info Successfully unsubscribed.
+            p.tryAgain Didn't work? #[a(href="/emailer/unsubscribe") Try again.]

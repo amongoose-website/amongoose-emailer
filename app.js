@@ -11,11 +11,12 @@ const Logger = require('./util/Logger');
 const app = express();
 
 // Include config
-const config = require('../config');
+const config = require('./config');
 
 // Middleware
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, './public')));
 
 app.set('view engine', 'pug');
 
