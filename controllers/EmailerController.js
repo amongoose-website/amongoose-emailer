@@ -109,13 +109,13 @@ class EmailerController {
 
     static async unsubscribe(req, res) {
         const { email } = req.body;
-        if (!email) return res.redirect('/emailer/unsubscribe');
+        if (!email) return res.redirect('/unsubscribe');
 
         if (EmailerController.unsubscribeBcc(email)) {
             Logger.info('Unsubscription', `${email} unsubscribed`);
         }
 
-        res.redirect(`/emailer/unsubscribe?done=true&email=${email}`);
+        res.redirect(`/unsubscribe?done=true&email=${email}`);
     }
 
     static unsubscribePage(req, res) {

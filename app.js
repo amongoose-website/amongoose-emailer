@@ -22,7 +22,7 @@ app.set('view engine', 'pug');
 
 // Routes
 const emailerRoute = require('./routes/emailer');
-app.use('/emailer', emailerRoute);
+app.use('/', emailerRoute);
 
 // Start server
 app.startServer = function() {
