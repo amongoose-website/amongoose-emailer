@@ -38,7 +38,7 @@ class EmailerController {
     }
 
     static templateEmail(data) {
-        return fs.readFileSync(path.join(__dirname, '../views/email.html')).toString()
+        return fs.readFileSync(path.join(__dirname, '../templates/email.html')).toString()
         .replace('&lt;DATE&gt;', data.date)
         .replace('&lt;SERIES_TITLE&gt;', data.seriesTitle)
         .replace('&lt;AUTHOR&gt;', data.author)
