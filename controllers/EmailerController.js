@@ -80,7 +80,6 @@ class EmailerController {
         // Send email
         EmailerController.sendEmail({
             personalizations: [{
-                to: 'anthony@amongoose.com',
                 bcc: EmailerController.loadBcc()
             }],
             from: process.env.EMAIL_FROM,
