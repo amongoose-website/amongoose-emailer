@@ -67,7 +67,7 @@ class EmailerController {
             .replace('”', '');
         
         // Fetch data from post
-        const { data } = await axios(`https://wwww.amongoose.com/posts/${slug}/json`, {params: {rawJson: true}})
+        const { data } = await axios(`https://www.amongoose.com/posts/${slug}/json`, {params: {rawJson: true}})
             .catch(error => {
                 Logger.error(`Axios Error: @slug: ${slug}`, error);
             })
