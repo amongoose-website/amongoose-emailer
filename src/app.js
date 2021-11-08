@@ -1,5 +1,6 @@
 
 // Include required modules
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -14,6 +15,9 @@ const config = require('../config');
 
 // Middleware
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../public')));
+
+app.set('view engine', 'pug');
 
 // Routes
 const emailerRoute = require('./routes/emailer');
