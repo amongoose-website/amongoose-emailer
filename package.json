@@ -1,0 +1,22 @@
+{
+  "name": "mongoose-emailer",
+  "version": "1.0.0",
+  "description": "Node emailer for amongoose.com",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "start": "node ."
+  },
+  "author": "Joshua Grimmett",
+  "license": "ISC",
+  "dependencies": {
+    "@sendgrid/mail": "^7.6.0",
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.0.0-rc.10",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "moment": "^2.29.1"
+  }
+}
