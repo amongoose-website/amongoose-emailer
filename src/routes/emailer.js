@@ -9,9 +9,12 @@ const EmailerController = require('../controllers/EmailerController');
 router.post('/newBlogPost', EmailerController.newBlogPost);
 
 // Subscribe post route
-router.post('/subscribe', EmailerController.subscribe)
+router.post('/subscribe', EmailerController.subscribe);
 
 // Unsubscribe post route
-router.post('/unsubscribe', EmailerController.unsubscribe)
+router.post('/unsubscribe', EmailerController.unsubscribe);
+
+// Unsubscribe get route
+router.get('/unsubscribe', EmailerController.unsubscribePage);
 
 module.exports = router;
