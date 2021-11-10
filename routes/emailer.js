@@ -6,7 +6,7 @@ const router = require('express').Router();
 const EmailerController = require('../controllers/EmailerController');
 
 // New blog post route
-router.post('/newBlogPost', EmailerController.newBlogPost);
+router.post('/webhook', EmailerController.newBlogPost);
 
 // Subscribe post route
 router.post('/subscribe', EmailerController.subscribe);
