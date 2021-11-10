@@ -6,6 +6,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const sendgrid = require('@sendgrid/mail');
 
+// Include models
+const Bcc = require('../models/Bcc');
+
 // Include utility
 const Logger = require('../util/Logger');
 
@@ -14,29 +17,43 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 
 class EmailerController {
-    static loadBcc() {
-        return require('../db/bcc.json');
+    /**
+     * Subscribe email and name in DB
+     * @param {String} name 
+     * @param {String} email 
+     * @returns {Boolean} Subscription successful
+     */
+    static async subscribeBcc(name, email) {
+        let bcc = Bcc.findOne({ email });
+
+        if (bcc && bcc.subscribed) {
+            return false;
+        } else if (bcc && !bcc.subscribed) {
+            bcc.subscribed = true;
+            await bcc.save();
+            return true;
+        } else {
+            bcc = new Bcc({ name, email, subscribed: true });
+            await bcc.save();
+            return true;
+        }
     }
 
-    static saveBcc(object) {
-        const jsonString = JSON.stringify(object, null, 4);
-        fs.writeFileSync(path.join(__dirname, '../db/bcc.json'), jsonString);
+
+    /**
+     * Unsubscribe email in DB
+     * @param {String} email 
+     * @returns {Boolean} Unsubscription successful
+     */
+    static async unsubscribeBcc(email) {
+        const bcc = await Bcc.findOne({ email });
+        if (!bcc) return false;
+
+        bcc.subscribed = false;
+        await bcc.save();
+        return true;
     }
 
-    static subscribeBcc(name, email) {
-        const bcc = EmailerController.loadBcc();
-        bcc.push({name, email});
-        EmailerController.saveBcc(bcc);
-        return bcc;
-    }
-
-    static unsubscribeBcc(email) {
-        let bcc = EmailerController.loadBcc();
-        const found = bcc.some(item => item.email === email);
-        bcc = bcc.filter(item => item.email !== email);
-        EmailerController.saveBcc(bcc);
-        return found;
-    }
 
     static templateEmail(data) {
         return fs.readFileSync(path.join(__dirname, '../templates/email.html')).toString()
@@ -47,10 +64,6 @@ class EmailerController {
         .replace('&lt;TAGS&gt;', data.tags.map(tag => `#${tag}`).join(', '))
         .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`)
         .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`);
-    }
-
-    static sendEmail(email) {
-        return sendgrid.send(email)
     }
 
     static async newBlogPost(req, res) {
@@ -77,10 +90,17 @@ class EmailerController {
         postData.slug = slug;
         const html = EmailerController.templateEmail(postData); 
 
+        const bcc = (await Bcc.find({ subscribed: true }))
+            .map(item => ({
+                name: item.name,
+                email: item.email
+            }));
+
         // Send email
-        EmailerController.sendEmail({
+        await sendgrid.send({
             personalizations: [{
-                bcc: EmailerController.loadBcc()
+                to: 'info@amongoose.com',
+                bcc
             }],
             from: process.env.EMAIL_FROM,
             subject: `New Post: ${postData.title}`,
@@ -110,11 +130,11 @@ class EmailerController {
         const { email } = req.body;
         if (!email) return res.redirect('/unsubscribe');
 
-        if (EmailerController.unsubscribeBcc(email)) {
+        if (await EmailerController.unsubscribeBcc(email)) {
             Logger.info('Unsubscription', `${email} unsubscribed`);
         }
 
-        res.redirect(`/unsubscribe?done=true&email=${email}`);
+        return res.redirect(`/unsubscribe?done=true&email=${email}`);
     }
 
     static unsubscribePage(req, res) {
