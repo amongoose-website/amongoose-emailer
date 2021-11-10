@@ -4,7 +4,7 @@
   "description": "Node emailer for amongoose.com",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon . & npm run scss",
+    "dev": "NODE_ENV=development nodemon . & npm run scss",
     "start": "node .",
     "scss": "sass --watch public/scss/main.scss public/css/index.css"
   },
@@ -20,6 +20,8 @@
     "express": "^4.17.1",
     "express-pug": "^1.0.0",
     "moment": "^2.29.1",
+    "mongodb": "^4.1.4",
+    "mongoose": "^6.0.12",
     "pug": "^3.0.2",
     "sass": "^1.43.4",
     "scss": "^0.2.4"
