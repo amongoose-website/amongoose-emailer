@@ -1,6 +1,7 @@
 
 // Include required modules
 const path = require('path');
+const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -10,6 +11,9 @@ const Logger = require('./util/Logger');
 // Initialise app
 const app = express();
 
+// Initialise DB
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.xdz53.mongodb.net/mongooseEmailer?retryWrites=true&w=majority`);
+
 // Include config
 const config = require('./config');
 
@@ -17,6 +21,14 @@ const config = require('./config');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
+
+// Developer middleware
+if (process.env.NODE_ENV === 'development') {
+    const devMiddleware = require('./tests/middleware');
+    Object.values(devMiddleware).forEach(router => {
+        app.use(router);
+    });
+}
 
 app.set('view engine', 'pug');
 
