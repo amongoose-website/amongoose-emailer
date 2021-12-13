@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const moment = require('moment');
 const cheerio = require('cheerio');
 const sendgrid = require('@sendgrid/mail');
 
@@ -56,14 +57,17 @@ class EmailerController {
 
 
     static templateEmail(data) {
+        const formattedDate = moment(data.date).format('MMMM Do YYYY, h:mm a');
+
         return fs.readFileSync(path.join(__dirname, '../templates/email.html')).toString()
-        .replace('&lt;DATE&gt;', data.date)
-        .replace('&lt;SERIES_TITLE&gt;', data.seriesTitle)
-        .replace('&lt;AUTHOR&gt;', data.author)
-        .replace('&lt;POST_TITLE&gt;', data.title)
-        .replace('&lt;TAGS&gt;', data.tags.map(tag => `#${tag}`).join(', '))
-        .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`)
-        .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`);
+            .replace('&lt;DATE&gt;', data.date)
+            .replace('&lt;SERIES_TITLE&gt;', data.seriesTitle)
+            .replace('&lt;AUTHOR&gt;', data.author)
+            .replace('&lt;POST_TITLE&gt;', data.title)
+            .replace('&lt;TAGS&gt;', data.tags.map(tag => `#${tag}`).join(', '))
+            .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`)
+            .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`)
+            .replace(/"/g, '');
     }
 
     static async newBlogPost(req, res) {
