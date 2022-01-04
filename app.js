@@ -5,6 +5,7 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const rateLimit = require('express-rate-limit');
 
 // Include utility
 const Logger = require('./util/Logger');
@@ -21,6 +22,12 @@ const config = require('./config');
 // Middleware
 app.use(cors({
     origin: config.corsWhitelist
+}));
+app.use(rateLimit({
+    windowMs: 24 * 60 * 60 * 1000, // 24 hour window
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
