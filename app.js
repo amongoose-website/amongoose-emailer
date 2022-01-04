@@ -23,12 +23,7 @@ const config = require('./config');
 app.use(cors({
     origin: config.corsWhitelist
 }));
-app.use(rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hour window
-    max: 5,
-    standardHeaders: true,
-    legacyHeaders: false
-}));
+app.use(rateLimit(config.rateLimit));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
