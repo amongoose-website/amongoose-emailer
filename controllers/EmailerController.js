@@ -25,7 +25,7 @@ class EmailerController {
      * @returns {Boolean} Subscription successful
      */
     static async subscribeBcc(name, email) {
-        let bcc = Bcc.findOne({ email });
+        let bcc = await Bcc.findOne({ email });
 
         if (bcc && bcc.subscribed) {
             return false;
@@ -122,7 +122,7 @@ class EmailerController {
 
     static async subscribe(req, res) {
         const { name, email } = req.body;
-        if (!name || !email) res.status(401).end();
+        if (!email) res.status(401).end();
 
         EmailerController.subscribeBcc(name, email);
         Logger.success('Subscription', `${name}:${email} subscribed.`);
