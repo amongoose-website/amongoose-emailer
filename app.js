@@ -1,8 +1,9 @@
 
 // Include required modules
 const path = require('path');
-const mongoose = require('mongoose');
+const cors = require('cors');
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 // Include utility
@@ -18,6 +19,7 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 const config = require('./config');
 
 // Middleware
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
