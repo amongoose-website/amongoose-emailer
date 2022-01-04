@@ -20,7 +20,7 @@ const config = require('./config');
 
 // Middleware
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'amongoose.com');
+    res.header('Access-Control-Allow-Origin', 'https://amongoose.com');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
