@@ -11,7 +11,7 @@ const bccSchema = new Schema({
     name: {
         type: String,
         unique: false,
-        required: true
+        required: false
     },
     subscribed: {
         type: Boolean,
