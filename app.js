@@ -19,11 +19,9 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 const config = require('./config');
 
 // Middleware
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://amongoose.com');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
+app.use(cors({
+    origin: corsWhitelist
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, './public')));
