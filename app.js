@@ -20,7 +20,7 @@ const config = require('./config');
 
 // Middleware
 app.use(cors({
-    origin: corsWhitelist
+    origin: config.corsWhitelist
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
