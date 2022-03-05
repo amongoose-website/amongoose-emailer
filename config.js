@@ -11,5 +11,8 @@ module.exports = {
         max: 2,
         standardHeaders: true,
         legacyHeaders: false
-    }
+    },
+    inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com'],
+    assetsPath: 'db/assets/',
+    postsPath: 'db/posts/'
 }
