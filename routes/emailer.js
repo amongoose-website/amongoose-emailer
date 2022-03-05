@@ -5,8 +5,8 @@ const router = require('express').Router();
 // Include controllers
 const EmailerController = require('../controllers/EmailerController');
 
-// New blog post route
-router.post('/webhook', EmailerController.newBlogPost);
+// Notification when Netlify deploy succeeds
+router.post('/deploySucceeded', EmailerController.deploySucceeded);
 
 // Subscribe post route
 router.post('/subscribe', EmailerController.subscribe);
