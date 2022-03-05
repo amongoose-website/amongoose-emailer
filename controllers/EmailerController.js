@@ -70,7 +70,7 @@ class EmailerController {
             .replace(/"/g, '');
     }
 
-    static async newBlogPost(req, res) {
+    static async deploySucceeded(req, res) {
         // Fetch title from request body
         const { title } = req.body;
         // Filter other requests
