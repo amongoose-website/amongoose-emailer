@@ -12,7 +12,7 @@ module.exports = {
         standardHeaders: true,
         legacyHeaders: false
     },
-    inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com'],
+    inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com', 'joshua@grimmett.com.au'],
     assetsPath: '/Users/jooshhg/Documents/Development/Commercial/Mongoose/mongoose-site/static/assets',
     postsPath: '/Users/jooshhg/Documents/Development/Commercial/Mongoose/mongoose-site/src/pages/posts',
     multerPath: `${__dirname}/uploads`,
