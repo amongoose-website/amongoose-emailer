@@ -33,7 +33,7 @@ class Post {
 
         // Assign filename in format: 2022-03-03-SUBJECT-HERE.md
         this._DATE = moment(this.headers.date).format('YYYY-MM-DD');
-        this._SUBJECT = sanitiseFileName(this.headers.subject);
+        this._SUBJECT = sanitiseFileName(this.headers.subject.replace(/\s+/g, '-').toLowerCase());
         this.fileName = `${this._DATE}-${this._SUBJECT}`;
         this.fileExt = '.md';
 
@@ -90,7 +90,11 @@ class Post {
         let markdownString = '---\n';
         for (let key of keys) {
             if (key !== 'attachments') {
-                markdownString += `${key}: ${this._frontmatter[key]}\n`;
+                if (typeof this._frontmatter[key] === 'string') {
+                    markdownString += `${key}: '${this._frontmatter[key]}'\n`
+                } else {
+                    markdownString += `${key}: ${this._frontmatter[key]}\n`;
+                }
             } else {
                 markdownString += 'attachments:\n';
                 for (let attachment of this._frontmatter.attachments) {
@@ -120,7 +124,7 @@ class Post {
         // Copy attachment from recieved attachment folder
         // to output folder
         for (let attachment of this.files) {
-            const originalPath = path.join(__dirname, '../', attachment.path);
+            const originalPath = path.join(attachment.path);
             // Ensure attachment still exists
             if (!fs.existsSync(originalPath)) 
                 return Logger.error('Attachment deleted', `Attachment ${originalPath} was deleted.`);
@@ -155,7 +159,7 @@ class Post {
         this.saveAssets();
         this.saveMarkdown();
 
-        exec(`git add . & git commit -m "Create Blog Posts “${this.fileName}”" & git push origin master`, { cwd: gitRepoPath });
+        exec(`git add . && git commit -m "Create Blog Posts “${this.fileName}”" && git push origin master`, { cwd: gitRepoPath });
     }
 }
 
