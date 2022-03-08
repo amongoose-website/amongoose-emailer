@@ -5,7 +5,6 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const rateLimit = require('express-rate-limit');
 
 // Include utility
 const Logger = require('./util/Logger');
@@ -20,27 +19,24 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 const config = require('./config');
 
 // Middleware
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
+
 app.use(cors({
     origin: config.corsWhitelist
 }));
-app.use(rateLimit(config.rateLimit));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, './public')));
 
-// Developer middleware
-if (process.env.NODE_ENV === 'development') {
-    const devMiddleware = require('./tests/middleware');
-    Object.values(devMiddleware).forEach(router => {
-        app.use(router);
-    });
-}
+app.use(express.static(path.join(__dirname, './public')));
 
 app.set('view engine', 'pug');
 
 // Routes
 const emailerRoute = require('./routes/emailer');
 app.use('/', emailerRoute);
+const inboundRoute = require('./routes/inbound');
+app.use('/', inboundRoute);
 
 // Start server
 app.startServer = function() {
