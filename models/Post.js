@@ -159,7 +159,7 @@ class Post {
         this.saveAssets();
         this.saveMarkdown();
 
-        exec(`git add . && git commit -m "Create Blog Posts “${this.fileName}”" && git push origin master`, { cwd: gitRepoPath });
+        exec(`/usr/bin/git add . && /usr/bin/git commit -m "Create Blog Posts “${this.fileName}”" && /usr/bin/git push origin master`, { cwd: gitRepoPath });
     }
 }
 
