@@ -13,6 +13,7 @@ module.exports = {
         legacyHeaders: false
     },
     inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com'],
-    assetsPath: 'db/assets/',
-    postsPath: 'db/posts/'
+    assetsPath: `${__dirname}/output/assets`,
+    postsPath: `${__dirname}/output/posts`,
+    multerPath: `${__dirname}/output/multer`
 }
