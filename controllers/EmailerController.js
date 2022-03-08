@@ -57,14 +57,16 @@ class EmailerController {
 
 
     static templateEmail(data) {
-        const formattedDate = moment(data.date).format('MMMM Do YYYY, h:mm a');
+        const formattedDate = data.date.split(' ').length > 3 ? 
+            moment(data.date).format('MMMM Do YYYY, h:mm a') :
+            data.date;
 
         return fs.readFileSync(path.join(__dirname, '../templates/email.html')).toString()
             .replace('&lt;DATE&gt;', data.date)
-            .replace('&lt;SERIES_TITLE&gt;', data.seriesTitle)
+            // .replace('&lt;SERIES_TITLE&gt;', data.seriesTitle)
             .replace('&lt;AUTHOR&gt;', data.author)
             .replace('&lt;POST_TITLE&gt;', data.title)
-            .replace('&lt;TAGS&gt;', data.tags.map(tag => `#${tag}`).join(', '))
+            .replace('&lt;TAGS&gt;', data.tags ? data.tags.map(tag => `#${tag}`).join(', ') : '')
             .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`)
             .replace('&lt;POST_URL&gt;', `https://amongoose.com/posts/${data.slug}/`)
             .replace(/"/g, '');
