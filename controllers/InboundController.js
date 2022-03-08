@@ -92,6 +92,7 @@ class InboundController {
 
         try {
             post.publish();
+            Logger.success('Published post', `Published ${post._frontmatter.title}`);
             return res.sendStatus(200);
         } catch (error) {
             Logger.error('Error publishing post', error);
