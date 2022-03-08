@@ -63,10 +63,11 @@ class InboundController {
     static filterEmail(req, res, next) {
         // If no email body, send bad request 
         if (!req.body || Object.keys(req.body).length < 1)
-            return res.sendStatus(400);
+            return res.status(400).send('Invalid email data.');
         
         // Ensure from authorised 
         const { from } = req.body;
+        if (!from) res.status(400).send('Invalid email data.');
         const filter = address => from.includes(address);
         const whitelist = inboundEmailWhitelist.map(address => filter(address));
         // Catch unauthorised requests
