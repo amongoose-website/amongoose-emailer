@@ -1,6 +1,10 @@
 
 // Include required modules
 const router = require('express').Router();
+const rateLimit = require('express-rate-limit');
+
+// Include config
+const config = require('../config');
 
 // Include controllers
 const EmailerController = require('../controllers/EmailerController');
@@ -9,7 +13,7 @@ const EmailerController = require('../controllers/EmailerController');
 router.post('/deploySucceeded', EmailerController.deploySucceeded);
 
 // Subscribe post route
-router.post('/subscribe', EmailerController.subscribe);
+router.post('/subscribe', rateLimit(config.rateLimit), EmailerController.subscribe);
 
 // Unsubscribe post route
 router.post('/unsubscribe', EmailerController.unsubscribe);
