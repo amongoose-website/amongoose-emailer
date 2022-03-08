@@ -13,7 +13,8 @@ module.exports = {
         legacyHeaders: false
     },
     inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com'],
-    assetsPath: `${__dirname}/output/assets`,
-    postsPath: `${__dirname}/output/posts`,
-    multerPath: `${__dirname}/output/multer`
+    assetsPath: '/Users/jooshhg/Documents/Development/Commercial/Mongoose/mongoose-site/static/assets',
+    postsPath: '/Users/jooshhg/Documents/Development/Commercial/Mongoose/mongoose-site/src/pages/posts',
+    multerPath: `${__dirname}/uploads`,
+    gitRepoPath: '/Users/jooshhg/Documents/Development/Commercial/Mongoose/mongoose-site/'
 }
