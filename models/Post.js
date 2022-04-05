@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const cheerio = require('cheerio');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const parseHeaders = require('parse-headers');
 const sanitiseFileName = require('sanitize-filename');
 
@@ -159,7 +159,8 @@ class Post {
         this.saveAssets();
         this.saveMarkdown();
 
-        exec(`/usr/bin/git add . && /usr/bin/git commit -m "Create Blog Posts “${this.fileName}”" && /usr/bin/git push origin master`, { cwd: gitRepoPath });
+        const process = spawn(`/usr/bin/git add . && /usr/bin/git commit -m "Create Blog Posts “${this.fileName}”" && /usr/bin/git push origin master`, { cwd: gitRepoPath });
+        process.stdout.on('data', data => console.log(data.toString().trim()))
     }
 }
 
