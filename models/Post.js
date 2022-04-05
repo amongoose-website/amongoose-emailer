@@ -4,7 +4,6 @@ const path = require('path');
 const moment = require('moment');
 const cheerio = require('cheerio');
 const { exec } = require('child_process');
-const parseHeaders = require('parse-headers');
 const sanitiseFileName = require('sanitize-filename');
 
 // Import util
@@ -13,63 +12,47 @@ const Logger = require('../util/Logger');
 // Import config
 const { assetsPath, postsPath, gitRepoPath } = require('../config');
 
-// Include models
-const Email = require('./Email');
-
 
 class Post {
     /**
      * Create a new post
-     * @param {Object} rawEmail Email object from Inbound Email webhook
+     * @param {Object} parsedEmail Email object from Mail Parser
      */
-    constructor(rawEmail) {
+    constructor(parsedEmail) {
         // Create email model from Email
-        this.email = new Email(rawEmail);
-        this.body = rawEmail.body;
-        this.files = rawEmail.files;
-
-        // Parse headers into key value pairs
-        this.headers = parseHeaders(this.body.headers);
+        this.email = parsedEmail;
 
         // Assign filename in format: 2022-03-03-SUBJECT-HERE.md
-        this._DATE = moment(this.headers.date).format('YYYY-MM-DD');
-        this._SUBJECT = sanitiseFileName(this.headers.subject.replace(/\s+/g, '-').toLowerCase());
+        this._DATE = moment(this.email.date).format('YYYY-MM-DD');
+        this._SUBJECT = sanitiseFileName(this.email.subject.replace(/\s+/g, '-').toLowerCase());
         this.fileName = `${this._DATE}-${this._SUBJECT}`;
         this.fileExt = '.md';
 
         // Create the frontmatter object
         this._frontmatter = {
             templateKey: 'post-page',
-            title: this.headers.subject,
+            title: this.email.subject,
             author: 'Anthony Mongoose',
             tags: null,
-            date: `${moment(this.headers.date).format('YYYY-MM-DDTHH:MM:SS.SSS')}Z`,
-            attachments: this.files.map(attachment => {
-                const extname = path.extname(attachment.originalname);
+            date: `${moment(this.email.date).format('YYYY-MM-DDTHH:MM:SS.SSS')}Z`,
+            attachments: this.email.attachments.map(attachment => {
+                const extname = path.extname(attachment.filename);
                 return {
-                    file: `/assets/${this.fileName}/${attachment.originalname}`,
-                    fileName: attachment.originalname.replace(extname, '')
+                    file: `/assets/${this.fileName}/${attachment.filename}`,
+                    fileName: attachment.filename.replace(extname, '')
                 }
             })
         };
     }
 
-    static async findPostByEmailId(id) {
-        // Search DB
-        const email = await Email.findById(id);
-        // Not found
-        if (!email || Object.keys(email).length <= 0) return null;
-
-        return new Post(email);
-    }
 
     /**
      * Render HTML
      * Fixes Image tag source paths
      */
-    get html() {
+    get oldHtml() {
         const $this = this;
-        const $ = cheerio.load(this.body.html);
+        const $ = cheerio.load(this.email.html);
         $('img').replaceWith(function() {
             const img = $(this);
             const alt = img.attr('alt');
@@ -103,17 +86,9 @@ class Post {
             }
         }
         markdownString += '---\n';
-        markdownString += this.html;
+        markdownString += this.email.html;
 
         return markdownString;
-    }
-
-    /**
-     * Save raw email to MongoDB
-     * @returns {Promise}
-     */
-    saveEmail() {
-        return this.email.save();
     }
 
     /**
@@ -123,7 +98,7 @@ class Post {
     saveAssets() {
         // Copy attachment from recieved attachment folder
         // to output folder
-        for (let attachment of this.files) {
+        for (let attachment of this.email.attachments) {
             const originalPath = path.join(attachment.path);
             // Ensure attachment still exists
             if (!fs.existsSync(originalPath)) 

@@ -3,6 +3,7 @@
 const path = require('path');
 const uuid = require('uuid');
 const multer = require('multer');
+const { simpleParser } = require('mailparser');
 
 // Include models
 const Post = require('../models/Post');
@@ -85,11 +86,14 @@ class InboundController {
      * @param {*} res 
      */
     static async emailRecieved(req, res) {
+        if (!req.body.email) return res.sendStatus(400);
+        
+        // Parse email
+        const email = await simpleParser(req.body.email);
         Logger.info('Email recieved', `from ${req.body.from}`);
-
+        
         // Create post and save Email to DB
-        const post = new Post({body: req.body, files: req.files});
-        await post.saveEmail();
+        const post = new Post(email, req.body.email);
 
         try {
             post.publish();
