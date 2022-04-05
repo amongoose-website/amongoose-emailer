@@ -100,10 +100,10 @@ class Post {
         // to output folder
         for (let attachment of this.email.attachments) {
             // Ensure attachment still exists
-            if (!fs.existsSync(originalPath)) 
-                return Logger.error('Attachment deleted', `Attachment ${originalPath} was deleted.`);
+            if (!attachment.content) 
+                return Logger.error('Attachment deleted', `Attachment ${atachment.filename} was deleted.`);
             
-            let newFilePath = `${assetsPath}/${this.fileName}/${attachment.originalname}`;
+            let newFilePath = `${assetsPath}/${this.fileName}/${attachment.filename}`;
             try {
                 // Ensure Directory exists
                 if (!fs.existsSync(path.dirname(newFilePath))) {
