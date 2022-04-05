@@ -99,7 +99,6 @@ class Post {
         // Copy attachment from recieved attachment folder
         // to output folder
         for (let attachment of this.email.attachments) {
-            const originalPath = path.join(attachment.path);
             // Ensure attachment still exists
             if (!fs.existsSync(originalPath)) 
                 return Logger.error('Attachment deleted', `Attachment ${originalPath} was deleted.`);
@@ -111,7 +110,7 @@ class Post {
                     fs.mkdirSync(path.dirname(newFilePath));
                 }
                 // Copy file
-                fs.copyFileSync(originalPath, newFilePath);
+                fs.writeFileSync(newFilePath, attachment.content);
             } catch(error) {
                 Logger.error('Error copying attachment', error);
             }
