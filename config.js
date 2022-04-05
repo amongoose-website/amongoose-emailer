@@ -13,8 +13,8 @@ module.exports = {
         legacyHeaders: false
     },
     inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com', 'joshua@grimmett.com.au'],
-    assetsPath: '/var/www/html/mongoose-gatsby-site/static/assets',
-    postsPath: '/var/www/html/mongoose-gatsby-site/src/pages/posts',
+    assetsPath: '/home/webserver/mongoose-gatsby-site/static/assets',
+    postsPath: '/home/webserver/mongoose-gatsby-site/src/pages/posts',
     multerPath: `${__dirname}/uploads`,
     gitRepoPath: '/var/www/html/mongoose-gatsby-site'
 }
