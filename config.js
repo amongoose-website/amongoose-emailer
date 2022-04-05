@@ -16,5 +16,5 @@ module.exports = {
     assetsPath: '/home/webserver/mongoose-gatsby-site/static/assets',
     postsPath: '/home/webserver/mongoose-gatsby-site/src/pages/posts',
     multerPath: `${__dirname}/uploads`,
-    gitRepoPath: '/var/www/html/mongoose-gatsby-site'
+    gitRepoPath: '/home/webserver/mongoose-gatsby-site/'
 }
