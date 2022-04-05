@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
 const cheerio = require('cheerio');
-const { exec } = require('child_process');
+const { spawn } = require('child_process');
 const parseHeaders = require('parse-headers');
 const sanitiseFileName = require('sanitize-filename');
 
