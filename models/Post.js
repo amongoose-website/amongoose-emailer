@@ -2,7 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const cheerio = require('cheerio');
 const { exec } = require('child_process');
 const sanitiseFileName = require('sanitize-filename');
 
@@ -10,7 +9,7 @@ const sanitiseFileName = require('sanitize-filename');
 const Logger = require('../util/Logger');
 
 // Import config
-const { assetsPath, postsPath, gitRepoPath } = require('../config');
+const { assetsPath, postsPath, gitRepoPath, emailContentFilter } = require('../config');
 
 
 class Post {
@@ -50,7 +49,12 @@ class Post {
      * Fixes Image tag source paths
      */
     get html() {
-        return this.email.html.replaceAll('<o:p></o:p>', '');
+        let neue = this.email.html;
+        for (let filter of emailContentFilter) {
+            neue.replaceAll(filter, '');
+        }
+
+        return neue;
     }
 
     /**
@@ -75,7 +79,7 @@ class Post {
             }
         }
         markdownString += '---\n';
-        markdownString += this.email.html;
+        markdownString += this.html;
 
         return markdownString;
     }
