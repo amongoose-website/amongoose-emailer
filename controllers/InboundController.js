@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
     }
 });
 // Create multer controller
-const _upload = multer({ storage });
+const _upload = multer({ storage, limits: { fieldSize: 1024 ** 3 } });
 
 
 class InboundController {
