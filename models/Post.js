@@ -45,23 +45,12 @@ class Post {
         };
     }
 
-
     /**
      * Render HTML
      * Fixes Image tag source paths
      */
-    get oldHtml() {
-        const $this = this;
-        const $ = cheerio.load(this.email.html);
-        $('img').replaceWith(function() {
-            const img = $(this);
-            const alt = img.attr('alt');
-            return `<picture>
-                <source srcset="/assets/${$this.fileName}/${alt}"/>
-                <img src="/assets/${$this.fileName}/${alt}"/>
-            </picture>`
-        })
-        return $.html();
+    get html() {
+        return this.email.html.replaceAll('<o:p></o:p>', '');
     }
 
     /**
