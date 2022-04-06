@@ -91,7 +91,7 @@ class EmailerController {
                 Logger.error(`Axios Error: @slug: ${slug}`, error);
             })
         // Parse html & json
-        console.log(body);
+        console.log(slug);
         const $ = cheerio.load(body.data);
         const postData = JSON.parse($('#jsonOutput').text());
         postData.slug = slug;
