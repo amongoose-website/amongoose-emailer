@@ -126,7 +126,7 @@ class Post {
         this.saveAssets();
         this.saveMarkdown();
 
-        exec(`/usr/bin/git add . && /usr/bin/git commit -m "Create Blog Posts “${this.fileName}”" && /usr/bin/git push origin master`,
+        exec(`/usr/bin/git pull origin master && /usr/bin/git add . && /usr/bin/git commit -m "Create Blog Posts “${this.fileName}”" && /usr/bin/git push origin master`,
             { cwd: gitRepoPath },
             error => {
                 if (error) Logger.error('Git command failed', error);
