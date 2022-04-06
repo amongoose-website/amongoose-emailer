@@ -86,12 +86,15 @@ class EmailerController {
             .replace('”', '');
         
         // Fetch data from post
-        const { data } = await axios(`https://www.amongoose.com.au/posts/${slug}/json`, {params: {rawJson: true}})
+        const body = await axios(`https://www.amongoose.com.au/posts/${slug}/json`, {params: {rawJson: true}})
             .catch(error => {
                 Logger.error(`Axios Error: @slug: ${slug}`, error);
             })
+
+        console.log(body);
+        if (!body) return;
         // Parse html & json
-        const $ = cheerio.load(data);
+        const $ = cheerio.load(body.data);
         const postData = JSON.parse($('#jsonOutput').text());
         postData.slug = slug;
         const html = EmailerController.templateEmail(postData); 
