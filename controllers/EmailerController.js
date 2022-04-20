@@ -131,7 +131,7 @@ class EmailerController {
         if (!body) return;
         // Parse html & json
         const $ = cheerio.load(body.data);
-        const postData = JSON.parse($('#jsonOutput').text());
+        return JSON.parse($('#jsonOutput').text());
     }
 
     static async subscribe(req, res) {
