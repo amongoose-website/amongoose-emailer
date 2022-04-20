@@ -16,6 +16,9 @@ const Logger = require('../util/Logger');
 // Initialise sendgrid
 sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
+// Email config
+const { sendgridTemplateId } = require('../config');
+
 
 class EmailerController {
     /**
@@ -62,7 +65,7 @@ class EmailerController {
             data.date;
 
         return fs.readFileSync(path.join(__dirname, '../templates/email.html')).toString()
-            .replace('&lt;DATE&gt;', data.date)
+            .replace('&lt;DATE&gt;', data.formattedDate)
             // .replace('&lt;SERIES_TITLE&gt;', data.seriesTitle)
             .replace('&lt;AUTHOR&gt;', data.author)
             .replace('&lt;POST_TITLE&gt;', data.title)
@@ -85,19 +88,7 @@ class EmailerController {
             .replace('“', '')
             .replace('”', '');
         
-        // Fetch data from post
-        const body = await axios(`https://www.amongoose.com.au/posts/${slug}/json`, {params: {rawJson: true}})
-            .catch(error => {
-                Logger.error(`Axios Error: @slug: ${slug}`, error);
-            })
-
-        console.log(body);
-        if (!body) return;
-        // Parse html & json
-        const $ = cheerio.load(body.data);
-        const postData = JSON.parse($('#jsonOutput').text());
-        postData.slug = slug;
-        const html = EmailerController.templateEmail(postData); 
+        const postData = await EmailerController.fetchPostData(slug);
 
         const bcc = (await Bcc.find({ subscribed: true }))
             .map(item => ({
@@ -113,8 +104,13 @@ class EmailerController {
             }],
             from: process.env.EMAIL_FROM,
             subject: `New Post: ${postData.title}`,
-            text: `${html}`,
-            html
+            dynamicTemplateData: {
+                author: postData.author,
+                title: postData.title,
+                date: postData.date,
+                postUrl: `https://amongoose.com/posts/${slug}/`
+            },
+            templateId: sendgridTemplateId
         }).then(() => {
             Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent.`);
         }).catch(error => {
@@ -123,6 +119,19 @@ class EmailerController {
 
         // End request
         res.status(200).end();
+    }
+    
+    static async fetchPostData(slug) {
+        // Fetch data from post
+        const body = await axios(`https://www.amongoose.com.au/posts/${slug}/json`, {params: {rawJson: true}})
+        .catch(error => {
+            Logger.error(`Axios Error: @slug: ${slug}`, error);
+        })
+
+        if (!body) return;
+        // Parse html & json
+        const $ = cheerio.load(body.data);
+        const postData = JSON.parse($('#jsonOutput').text());
     }
 
     static async subscribe(req, res) {

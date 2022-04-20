@@ -17,5 +17,6 @@ module.exports = {
     postsPath: '/home/webserver/mongoose-gatsby-site/src/pages/posts',
     multerPath: `${__dirname}/uploads`,
     gitRepoPath: '/home/webserver/mongoose-gatsby-site/',
-    emailContentFilter: ['<o:p></o:p>', '�']
+    emailContentFilter: ['<o:p></o:p>', '�'],
+    sendgridTemplateId: 'd-66d0940019a34234bd3c5c2ffe427161'
 }
