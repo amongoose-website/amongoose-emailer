@@ -103,12 +103,12 @@ class EmailerController {
                 bcc
             }],
             from: process.env.EMAIL_FROM,
-            subject: `New Post: ${postData.title}`,
             dynamicTemplateData: {
                 author: postData.author,
                 title: postData.title,
                 date: postData.date,
-                postUrl: `https://amongoose.com/posts/${slug}/`
+                postUrl: `https://amongoose.com/posts/${slug}/`,
+                subject: `New Post: ${postData.title}`
             },
             templateId: sendgridTemplateId
         }).then(() => {
