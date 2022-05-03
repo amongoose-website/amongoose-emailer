@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
+const cheerio = require('cheerio');
 const { exec } = require('child_process');
 const sanitiseFileName = require('sanitize-filename');
 
@@ -30,7 +31,7 @@ class Post {
         // Create the frontmatter object
         this._frontmatter = {
             templateKey: 'post-page',
-            title: this.email.subject,
+            title: this.email.subject.replace('Fwd: ', ''),
             author: 'Anthony Mongoose',
             tags: null,
             date: `${moment(this.email.date).format('YYYY-MM-DDTHH:MM:SS.SSS')}Z`,
@@ -54,7 +55,18 @@ class Post {
             neue.replaceAll(filter, '');
         }
 
-        return neue;
+        const $ = cheerio.load(neue);
+        
+        // Sanitise forwards
+        $('.gmail_attr').each((_i, el) => {
+            $('br').first().remove();
+            $('br').first().remove();
+            $('br').last().remove();
+            $('br').last().remove();
+            $(el).remove();
+        });
+        
+        return $.html();
     }
 
     /**
