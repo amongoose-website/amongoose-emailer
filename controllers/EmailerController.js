@@ -96,6 +96,8 @@ class EmailerController {
                 email: item.email
             }));
 
+        const emailTitle = postData.title.replace(/(&quot;)/g, '');
+
         // Send email
         await sendgrid.send({
             personalizations: [{
@@ -108,7 +110,7 @@ class EmailerController {
                 title: postData.title,
                 date: postData.date,
                 postUrl: `https://amongoose.com/posts/${slug}/`,
-                subject: `New Post: ${postData.title}`
+                subject: `New Post: ${emailTitle}`
             },
             templateId: sendgridTemplateId
         }).then(() => {
