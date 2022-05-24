@@ -16,6 +16,11 @@ const bccSchema = new Schema({
     subscribed: {
         type: Boolean,
         required: true
+    },
+    groups: {
+        type: Array,
+        required: true,
+        default: ['bcc1', 'bcc2', 'bcc3']
     }
 });
 
