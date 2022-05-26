@@ -29,7 +29,7 @@ class Post {
         this.fileName = `${this._DATE}-${this._SUBJECT}`;
         this.fileExt = '.md';
 
-        const bccList = this.email.to.value[0].address
+        const groups = this.email.to.value[0].address
             .split('@')[1]
             .split('.')[0];
 
@@ -40,7 +40,7 @@ class Post {
             author: 'Anthony Mongoose',
             tags: null,
             date: `${moment(this.email.date).format('YYYY-MM-DDTHH:MM:SS.SSS')}Z`,
-            bccList,
+            groups,
             attachments: this.email.attachments.map(attachment => {
                 const extname = path.extname(attachment.filename);
                 return {
