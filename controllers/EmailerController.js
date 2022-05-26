@@ -90,7 +90,10 @@ class EmailerController {
         
         const postData = await EmailerController.fetchPostData(slug);
 
-        const bcc = (await Bcc.find({ subscribed: true }))
+        const bcc = (await Bcc.find({ 
+            subscribed: true, 
+            groups: postData.groups 
+        }))
             .map(item => ({
                 name: item.name,
                 email: item.email
