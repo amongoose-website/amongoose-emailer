@@ -5,6 +5,7 @@ const moment = require('moment');
 const cheerio = require('cheerio');
 const { exec } = require('child_process');
 const sanitiseFileName = require('sanitize-filename');
+const { ParsedMail } = require('mailparser');
 
 // Import util
 const Logger = require('../util/Logger');
@@ -16,7 +17,7 @@ const { assetsPath, postsPath, gitRepoPath, emailContentFilter } = require('../c
 class Post {
     /**
      * Create a new post
-     * @param {Object} parsedEmail Email object from Mail Parser
+     * @param {ParsedMail} parsedEmail Email object from Mail Parser
      */
     constructor(parsedEmail) {
         // Create email model from Email
@@ -28,6 +29,10 @@ class Post {
         this.fileName = `${this._DATE}-${this._SUBJECT}`;
         this.fileExt = '.md';
 
+        const bccList = this.email.to.value[0].address
+            .split('@')[1]
+            .split('.')[0];
+
         // Create the frontmatter object
         this._frontmatter = {
             templateKey: 'post-page',
@@ -35,6 +40,7 @@ class Post {
             author: 'Anthony Mongoose',
             tags: null,
             date: `${moment(this.email.date).format('YYYY-MM-DDTHH:MM:SS.SSS')}Z`,
+            bccList,
             attachments: this.email.attachments.map(attachment => {
                 const extname = path.extname(attachment.filename);
                 return {
