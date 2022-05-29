@@ -101,6 +101,9 @@ class EmailerController {
 
         const emailTitle = postData.title.replace(/(&quot;)/g, '');
 
+        Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent.\nTo ${bcc}`);
+        return;
+
         // Send email
         await sendgrid.send({
             personalizations: [{
@@ -117,7 +120,7 @@ class EmailerController {
             },
             templateId: sendgridTemplateId
         }).then(() => {
-            Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent.`);
+            Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent.\nTo ${bcc}`);
         }).catch(error => {
             Logger.error('Post Notification', error);
         });
