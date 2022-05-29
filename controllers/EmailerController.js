@@ -117,7 +117,7 @@ class EmailerController {
             },
             templateId: sendgridTemplateId
         }).then(() => {
-            Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent.`);
+            Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent to bcc list ${postData.groups}.`);
         }).catch(error => {
             Logger.error('Post Notification', error);
         });
