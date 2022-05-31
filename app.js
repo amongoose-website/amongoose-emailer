@@ -37,6 +37,12 @@ const emailerRoute = require('./routes/emailer');
 app.use('/', emailerRoute);
 const inboundRoute = require('./routes/inbound');
 app.use('/', inboundRoute);
+const adminRoute = require('./routes/admin');
+app.use('/admin/', adminRoute);
+
+app.get('/', (req, res) => {
+    return res.redirect('/admin/login');
+});
 
 // Start server
 app.startServer = function() {
