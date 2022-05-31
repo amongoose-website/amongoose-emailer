@@ -5,6 +5,7 @@ const cors = require('cors');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { auth } = require('express-openid-connect');
 
 // Include utility
 const Logger = require('./util/Logger');
@@ -17,16 +18,21 @@ mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PA
 
 // Include config
 const config = require('./config');
+// Auth config
+const authConfig = {
+    authRequired: false,
+    auth0Logout: true,
+    secret: 'a long, randomly-generated string stored in env',
+    baseURL: 'http://localhost:2022',
+    clientID: 'mlG3yPtAxgpKXrWlirYVLloaAPAMUG4a',
+    issuerBaseURL: 'https://dev-4zromrqu.au.auth0.com'
+ };
 
 // Middleware
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-app.use(cors({
-    origin: config.corsWhitelist
-}));
+app.use(cors({ origin: config.corsWhitelist }));
+app.use(auth(authConfig));
 
 app.use(express.static(path.join(__dirname, './public')));
 
@@ -39,10 +45,6 @@ const inboundRoute = require('./routes/inbound');
 app.use('/', inboundRoute);
 const adminRoute = require('./routes/admin');
 app.use('/admin/', adminRoute);
-
-app.get('/', (req, res) => {
-    return res.redirect('/admin/login');
-});
 
 // Start server
 app.startServer = function() {
