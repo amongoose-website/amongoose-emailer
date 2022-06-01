@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const Email = require('../models/Email');
 
 
@@ -9,6 +10,8 @@ const Email = require('../models/Email');
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
+=======
+>>>>>>> e7a041ae83df72af05d5bc123785f7a5b70da869
 
 
 class AdminController {
