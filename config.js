@@ -13,10 +13,10 @@ module.exports = {
         legacyHeaders: false
     },
     inboundEmailWhitelist: ['anthony@amongoose.com', 'jooshuagrimmett@gmail.com', 'joshua@grimmett.com.au'],
-    assetsPath: '/home/webserver/mongoose-gatsby-site/static/assets',
-    postsPath: '/home/webserver/mongoose-gatsby-site/src/pages/posts',
+    assetsPath: '/home/webadmin/mongoose-gatsby-site/static/assets',
+    postsPath: '/home/webadmin/mongoose-gatsby-site/src/pages/posts',
     multerPath: `${__dirname}/uploads`,
-    gitRepoPath: '/home/webserver/mongoose-gatsby-site/',
+    gitRepoPath: '/home/webadmin/mongoose-gatsby-site/',
     emailContentFilter: ['<o:p></o:p>', '�'],
     sendgridTemplateId: 'd-66d0940019a34234bd3c5c2ffe427161'
 }
