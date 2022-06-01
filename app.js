@@ -50,8 +50,9 @@ app.use('/admin/', adminRoute);
 
 // 404 Page
 app.use((req, res) => {
-    res.render('404', {
+    res.render('error', {
         pageTitle: 'Page Not Found', 
+        code: 404,
         reqUrl: req.url, 
         user: req.oidc.user
     })
