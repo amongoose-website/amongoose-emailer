@@ -79,10 +79,9 @@ class AdminController {
         
         req.post = new Post(req.email.parsedEmail);
         // Send post live
-        console.log(req.post.fileName)
-        // req.post.goLive()
-            // ? next()
-            // : res.render('error', {code: 500})
+        req.post.goLive()
+            ? next()
+            : res.render('error', {code: 500})
     }
 }
 
