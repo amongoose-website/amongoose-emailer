@@ -159,7 +159,7 @@ class Post {
     goLive() {
         try {
             this.publish();
-            Logger.success('Published post', `Published ${post._frontmatter.title}`);
+            Logger.success('Published post', `Published ${this._frontmatter.title}`);
             return true;
         } catch (error) {
             Logger.error('Error publishing post', error);
