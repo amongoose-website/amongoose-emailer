@@ -76,19 +76,7 @@ class EmailerController {
             .replace(/"/g, '');
     }
 
-    static async deploySucceeded(req, res) {
-        // Fetch title from request body
-        const { title } = req.body;
-        // Filter other requests
-        if (!title) return;
-        if (!title.includes('Create Blog Posts')
-            && !title.includes('Update Blog Posts')) return;
-        
-        // Extract slug from title
-        const slug = title.split(' ')[3]
-            .replace('“', '')
-            .replace('”', '');
-
+    static async sendNotification(slug) {
         const email = await Email.findOne({ fileName: slug});
         if (email.sentNotifications.length > 0) 
             return Logger.info('Duplicate notification', `Notification for ${slug} has already been sent`);
@@ -133,6 +121,22 @@ class EmailerController {
         }).catch(error => {
             Logger.error('Post Notification', error);
         });
+    }
+
+    static async deploySucceeded(req, res) {
+        // Fetch title from request body
+        const { title } = req.body;
+        // Filter other requests
+        if (!title) return;
+        if (!title.includes('Create Blog Posts')
+            && !title.includes('Update Blog Posts')) return;
+        
+        // Extract slug from title
+        const slug = title.split(' ')[3]
+            .replace('“', '')
+            .replace('”', '');
+
+        await EmailerController.sendNotification(slug);
 
         // End request
         res.status(200).end();

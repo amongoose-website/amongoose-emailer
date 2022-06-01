@@ -2,6 +2,7 @@ const moment = require('moment');
 
 const Post = require('../models/Post');
 const Email = require('../models/Email');
+const EmailerController = require('./EmailerController');
 
 /**
  * Capatilise first letter of a string
@@ -82,6 +83,17 @@ class AdminController {
         req.post.goLive()
             ? next()
             : res.render('error', {code: 500})
+    }
+
+    static async postNotification(req, _res, next) {
+        const { fileName } = req.params;
+
+        try {
+            await EmailerController.sendNotification(fileName);
+            next();
+        } catch(error) {
+            return res.render('error', {code: 500, message: error});
+        }
     }
 }
 

@@ -18,4 +18,8 @@ router.get('/inbox/:fileName', requiresAuth(), AdminController.renderEmailPage);
 // Send email live
 router.get('/inbox/:fileName/goLive', requiresAuth(), AdminController.postGoLive, AdminController.renderEmailPage);
 
+// Send email live
+router.get('/inbox/:fileName/notify', requiresAuth(), AdminController.postNotification, AdminController.renderEmailPage);
+
+
 module.exports = router;
