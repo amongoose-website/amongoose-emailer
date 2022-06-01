@@ -1,3 +1,6 @@
+const moment = require('moment');
+
+const Post = require('../models/Post');
 const Email = require('../models/Email');
 
 /**
@@ -26,12 +29,23 @@ class AdminController {
 
     /**
      * Render emails page
-     * @param {Request} _req 
+     * @param {Request} req 
      * @param {Response} res 
      */
-    static async renderEmailsPage(_req, res) {
+    static async renderInboxPage(req, res) {
+        const user = req.oidc.user;
         const emails = await Email.find();
-        res.render('dash-emails', { emails });
+        
+        
+        res.render('dash-inbox', { 
+            user,
+            emails: emails.map(email => {
+                email.post = new Post(email.parsedEmail)
+                return email;
+            }), 
+            pageTitle: 'Inbox',
+            moment
+        });
     }
 }
 

@@ -1,0 +1,27 @@
+extends ./themes/dash.pug
+
+block head
+    title Emails
+
+block content
+    table.table.table-hover
+        thead 
+            tr.text-align-center
+                th(scope="col") Title
+                th(scope="col") Date
+                th(scope="col") Live
+                th(scope="col") Notified
+        tbody
+            for email in emails
+                tr(scope="row")
+                    td=email.post._frontmatter.title
+                    td=moment(email.createdAt).format('HH:mma DD/MM/YYYY')
+                    if email.posted
+                        td #[button.btn.btn-outline-success.btn-sm Live]
+                    else
+                        td #[button.btn.btn-outline-secondary.btn-sm.disabled Not live]
+                    if email.sentNotifications.length > 0
+                        td #[button.btn.btn-outline-success.btn-sm Sent]
+                    else
+                        td #[button.btn.btn-outline-secondary.btn-sm.disabled Not sent]
+                    td #[a(href=`inbox/${email.fileName}`) Details]
