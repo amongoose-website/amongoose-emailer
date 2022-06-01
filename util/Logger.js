@@ -19,7 +19,7 @@ class Logger {
     static out(...msg) {
         console.log(msg.join(' '));
         const logFile = path.join(__dirname, '..', 'logs', moment(new Date()).format('DD-MM-YYYY') + '.txt')
-        fs.appendFileSync(logFile, msg.join(' ').replace(/\u001b\[.*?m/g, ''));
+        fs.appendFileSync(logFile, msg.join(' ').replace(/\u001b\[.*?m/g, '') + '\n');
     }
 
     // Logger

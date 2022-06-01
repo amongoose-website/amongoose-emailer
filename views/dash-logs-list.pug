@@ -1,0 +1,16 @@
+extends ./themes/dash.pug
+
+block head
+    title #{pageTitle} | Mongoose Mailer
+
+block content
+    table.table.table-hover
+        thead 
+            tr.text-align-center
+                th(scope="col") Logs Date
+                th(scope="col") File
+        tbody
+            for logsFile in logs.reverse()
+                tr(scope="row")
+                    td=moment(logsFile.replace('.txt', ''), 'DD-MM-YYYY').format('DD MMM YYYY')
+                    td #[a(href=`logs/${logsFile}`) /#{logsFile}]

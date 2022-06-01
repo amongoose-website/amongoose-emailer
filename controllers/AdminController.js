@@ -1,3 +1,4 @@
+const fs = require('fs');
 const moment = require('moment');
 
 const Post = require('../models/Post');
@@ -94,6 +95,19 @@ class AdminController {
         } catch(error) {
             return res.render('error', {code: 500, message: error});
         }
+    }
+
+    static async renderLogsListPage(req, res) {
+        const { user } = req.oidc;
+        const logs = fs.readdirSync('logs');
+        res.render('dash-logs-list', { logs, user, pageTitle: 'Logs', moment });
+    }
+
+    static async renderLogsPage(req, res) {
+        const { user } = req.oidc;
+        const logs = fs.readFileSync(`logs/${req.params.fileName}`).toString();
+        
+        res.render('dash-logs', { logs, user, pageTitle: 'Logs' });
     }
 }
 
