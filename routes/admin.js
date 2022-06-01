@@ -6,10 +6,16 @@ const { requiresAuth } = require('express-openid-connect');
 // Include controllers
 const AdminController = require('../controllers/AdminController');
 
-// Home Page
+// Home page
 router.get('/', requiresAuth(), AdminController.renderHomePage);
 
-// Emails Page
-router.get('/emails', requiresAuth(), AdminController.renderEmailsPage);
+// Emails page
+router.get('/inbox', requiresAuth(), AdminController.renderInboxPage);
+
+// Individual email pages
+router.get('/inbox/:fileName', requiresAuth(), AdminController.renderEmailPage);
+
+// Send email live
+router.get('/inbox/:fileName/goLive', requiresAuth(), AdminController.postGoLive, AdminController.renderEmailPage);
 
 module.exports = router;

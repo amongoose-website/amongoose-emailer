@@ -7,6 +7,7 @@ const { simpleParser } = require('mailparser');
 
 // Include models
 const Post = require('../models/Post');
+const Email = require('../models/Email');
 
 // Include utility
 const Logger = require('../util/Logger');
@@ -89,20 +90,24 @@ class InboundController {
         if (!req.body.email) return res.sendStatus(400);
         
         // Parse email
-        const email = await simpleParser(req.body.email);
+        const parsedEmail = await simpleParser(req.body.email);
         Logger.info('Email recieved', `from ${req.body.from}`);
         
-        // Create post and save Email to DB
-        const post = new Post(email, req.body.email);
+        // Create post for site
+        const post = new Post(parsedEmail);
+        const { fileName } = post;
 
-        try {
-            post.publish();
-            Logger.success('Published post', `Published ${post._frontmatter.title}`);
-            return res.sendStatus(200);
-        } catch (error) {
-            Logger.error('Error publishing post', error);
-            return res.sendStatus(500);
+        if (await Email.exists({ fileName })) {
+            Logger.info('Duplicate email', `Duplicate: ${fileName} recieved.`);
+            return;
         }
+
+        const email = new Email({ parsedEmail, fileName });
+        // Save to DB
+        await email.save();
+
+        // Go live
+        // res.sendStatus(post.goLive() ? 200 : 500);
     }
 }
 

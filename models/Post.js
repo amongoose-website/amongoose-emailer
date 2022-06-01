@@ -151,6 +151,21 @@ class Post {
             }    
         );
     }
+
+    /**
+     * Sends a post to the website (going live).
+     * @returns {Boolean} Whether going live was successful
+     */
+    goLive() {
+        try {
+            this.publish();
+            Logger.success('Published post', `Published ${post._frontmatter.title}`);
+            return true;
+        } catch (error) {
+            Logger.error('Error publishing post', error);
+            return false;
+        }
+    }
 }
 
 module.exports = Post;

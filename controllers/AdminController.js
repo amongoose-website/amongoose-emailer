@@ -28,6 +28,29 @@ class AdminController {
     }
 
     /**
+     * Render invdividual email page
+     * @param {Request} req 
+     * @param {Response} res 
+     */
+    static async renderEmailPage(req, res) {
+        const user = req.oidc.user;
+        const { fileName } = req.params;
+        
+        // Find and filter to correct email
+        const email = req.email ?? await Email.findOne({ fileName });
+        if (!email) return res.render('error', {code: 404});
+        
+        const post = req.post ?? new Post(email.parsedEmail);
+
+        res.render('dash-email', {
+            user,
+            email,
+            post,
+            pageTitle: `Email: ${post._frontmatter.title}`
+        });
+    }
+
+    /**
      * Render emails page
      * @param {Request} req 
      * @param {Response} res 
@@ -46,6 +69,19 @@ class AdminController {
             pageTitle: 'Inbox',
             moment
         });
+    }
+
+    static async postGoLive(req, res, next) {
+        const { fileName } = req.params;
+
+        req.email = await Email.findOne({ fileName });
+        if (!req.email) return res.render('404');
+        
+        req.post = new Post(req.email.parsedEmail);
+        // Send post live
+        req.post.goLive()
+            ? next()
+            : res.render('error', {code: 500})
     }
 }
 

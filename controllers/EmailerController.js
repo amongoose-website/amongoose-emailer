@@ -9,6 +9,7 @@ const sendgrid = require('@sendgrid/mail');
 
 // Include models
 const Bcc = require('../models/Bcc');
+const Email = require('../models/Email');
 
 // Include utility
 const Logger = require('../util/Logger');
@@ -87,6 +88,10 @@ class EmailerController {
         const slug = title.split(' ')[3]
             .replace('“', '')
             .replace('”', '');
+
+        const email = Email.findOne({ fileName: slug});
+        if (email.sentNotifications.length > 0) 
+            return Logger.info('Duplicate notification', `Notification for ${slug} has already been sent`);
         
         const postData = await EmailerController.fetchPostData(slug);
 
@@ -100,6 +105,13 @@ class EmailerController {
             }));
 
         const emailTitle = postData.title.replace(/(&quot;)/g, '');
+        const dynamicTemplateData ={
+            author: postData.author,
+            title: postData.title,
+            date: postData.date,
+            postUrl: `https://amongoose.com/posts/${slug}/`,
+            subject: `New Post: ${emailTitle}`
+        };
 
         // Send email
         await sendgrid.send({
@@ -108,16 +120,16 @@ class EmailerController {
                 bcc
             }],
             from: process.env.EMAIL_FROM,
-            dynamicTemplateData: {
-                author: postData.author,
-                title: postData.title,
-                date: postData.date,
-                postUrl: `https://amongoose.com/posts/${slug}/`,
-                subject: `New Post: ${emailTitle}`
-            },
+            dynamicTemplateData,
             templateId: sendgridTemplateId
-        }).then(() => {
+        }).then(async () => {
             Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent to bcc list ${postData.groups}.`);
+            email.sentNotifications.push({
+                sentAt: new Date(),
+                bcc,
+                data: dynamicTemplateData
+            });
+            await email.save();
         }).catch(error => {
             Logger.error('Post Notification', error);
         });

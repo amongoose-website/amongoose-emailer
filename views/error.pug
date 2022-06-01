@@ -1,0 +1,7 @@
+extends ./themes/dash.pug
+
+block content
+    if code == 404
+        p Page #[a(href=reqUrl) "#{reqUrl}"] could not be found.
+    else
+        p #{code}: #{message}
