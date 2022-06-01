@@ -2,16 +2,30 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+/**
+ * @type {Schema}
+ */
 const emailSchema = new Schema({
-    body: {
+    parsedEmail: {
         type: Object,
         unique: false,
         required: true
     },
-    files: {
-        type: Array,
+    posted: {
+        type: Boolean,
         unique: false,
-        required: false
+        required: true,
+        default: false
+    },
+    sentNotifications: {
+        type: Array,
+        required: true,
+        default: []
+    },
+    fileName: {
+        type: String,
+        required: true,
+        unique: true
     }
 }, {
     timestamps: true
