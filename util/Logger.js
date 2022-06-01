@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const chalk = require("chalk");
 const moment = require("moment");
 
@@ -11,7 +13,13 @@ class Logger {
 
     // Logging Time Format
     static time() {
-        return moment().format("HH:mm:ss");
+        return moment().format("DD/MM/YY HH:mm:ss");
+    }
+
+    static out(...msg) {
+        console.log(msg.join(' '));
+        const logFile = path.join(__dirname, '..', 'logs', moment(new Date()).format('DD-MM-YYYY') + '.txt')
+        fs.appendFileSync(logFile, msg.join(' ').replace(/\u001b\[.*?m/g, ''));
     }
 
     // Logger
@@ -22,16 +30,16 @@ class Logger {
 
         // Log Multiple
         if (Array.isArray(message)) {
-            for (const item of message) console.log(style.bold(`[${Logger.time()} ${toUpper(name)}]`), style(item));
+            for (const item of message) Logger.out(style.bold(`[${Logger.time()} ${toUpper(name)}]`), style(item));
             return false;
         // Log Stacktrace
         } else if (stacktrace) {
-            console.log(style.bold(`[${Logger.time()} ${toUpper(name)}]`), style(message));
+            Logger.out(style.bold(`[${Logger.time()} ${toUpper(name)}]`), style(message));
             return console.trace(require("util").format(message));
         // Log Normally
         } else {
             message = typeof message === "string" ? message.replace(/\r?\n|\r/g, " ") : message;
-            return console.log(style.bold(`[${Logger.time()} ${toUpper(name)}]`), style(message));
+            return Logger.out(style.bold(`[${Logger.time()} ${toUpper(name)}]`), style(message));
         }
     }
 
