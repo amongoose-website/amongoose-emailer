@@ -39,10 +39,10 @@ class AdminController {
         const { fileName } = req.params;
         
         // Find and filter to correct email
-        const email = req.email ?? await Email.findOne({ fileName });
+        const email = req.email || await Email.findOne({ fileName });
         if (!email) return res.render('error', {code: 404});
         
-        const post = req.post ?? new Post(email.parsedEmail);
+        const post = req.post || new Post(email.parsedEmail);
 
         res.render('dash-email', {
             user,
