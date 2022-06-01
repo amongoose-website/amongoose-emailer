@@ -22,7 +22,7 @@ const config = require('./config');
 const authConfig = {
     authRequired: false,
     auth0Logout: true,
-    secret: 'a long, randomly-generated string stored in env',
+    secret: process.env.AUTH0_SECRET,
     baseURL: 'http://localhost:2022',
     clientID: 'mlG3yPtAxgpKXrWlirYVLloaAPAMUG4a',
     issuerBaseURL: 'https://dev-4zromrqu.au.auth0.com'
@@ -45,6 +45,15 @@ const inboundRoute = require('./routes/inbound');
 app.use('/', inboundRoute);
 const adminRoute = require('./routes/admin');
 app.use('/admin/', adminRoute);
+
+// 404 Page
+app.use((req, res) => {
+    res.render('404', {
+        pageTitle: 'Page Not Found', 
+        reqUrl: req.url, 
+        user: req.oidc.user
+    })
+})
 
 // Start server
 app.startServer = function() {

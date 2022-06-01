@@ -1,0 +1,8 @@
+extends ./themes/dash.pug
+
+block head
+    title Emails
+
+block content
+    for email in emails
+        p=JSON.stringify(email, null, 4)

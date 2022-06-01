@@ -1,0 +1,54 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/css/index.css")
+        link(rel="stylesheet", href="/css/dash.css")
+        link(rel="icon", href="/img/favicon.png", type="image/x-icon")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
+        script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous")
+        block head
+
+    body
+        header.navbar.navbar-dark.sticky-top.bg-dark.flex-md-nowrap.p-0.shadow
+            a.navbar-brand.col-md-3.col-lg-2.me-0.px-3.fs-6(href="#")
+                span.text-center Mongoose Mailer
+            button.navbar-toggler.position-absolute.d-md-none.collapsed(type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation")
+                span.navbar-toggler-icon
+
+            .navbar-nav
+                .nav-item.text-nowrap
+                    if user
+                        <div class="flex-shrink-0 dropdown">
+                          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                          </a>
+                          <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                            <li><a class="dropdown-item" href="#">New project...</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                          </ul>
+                        </div>
+                    else
+                        a.nav-link.px-3(href="/login")
+                            button.btn.btn-primary Login
+
+        .container-fluid
+            .row
+            nav#sidebarMenu.col-md-3.col-lg-2.d-md-block.bg-light.sidebar.collapse
+              .position-sticky.pt-3
+                ul.nav.flex-column
+                  li.nav-item
+                    a.nav-link.active(aria-current="page" href="#")
+                      span.align-text-bottom.material-icons home
+                      span.align-text-bottom Dashboard
+
+            main.col-md-9.ms-sm-auto.col-lg-10.px-md-4
+                .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+                    h1.h2.font-weight-bolder= pageTitle
+            
+                block content
