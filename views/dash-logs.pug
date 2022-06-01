@@ -1,0 +1,18 @@
+extends ./themes/dash.pug
+
+block head
+    title #{pageTitle} | Mongoose Mailer
+
+block content
+    table.table.table-hover.table-responsive
+        thead 
+            tr.text-align-center
+                th(scope="col") Date
+                th(scope="col") Title
+                th(scope="col") Message
+        tbody
+            for message in logs.split('\n')
+                tr(scope="row")
+                    td=message.split(' ').slice(0, 2).join(' ').replace('[', '')
+                    td=message.split(' ').slice(2).join(' ').split(']')[0]
+                    td=message.split(' ').slice(2).join(' ').split(']')[1]

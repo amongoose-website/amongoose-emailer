@@ -21,5 +21,10 @@ router.get('/inbox/:fileName/goLive', requiresAuth(), AdminController.postGoLive
 // Send email live
 router.get('/inbox/:fileName/notify', requiresAuth(), AdminController.postNotification, AdminController.renderEmailPage);
 
+// Logs list
+router.get('/logs', requiresAuth(), AdminController.renderLogsListPage);
+
+// Log page
+router.get('/logs/:fileName', requiresAuth(), AdminController.renderLogsPage);
 
 module.exports = router;
