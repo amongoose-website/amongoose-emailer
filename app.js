@@ -23,7 +23,9 @@ const authConfig = {
     authRequired: false,
     auth0Logout: true,
     secret: process.env.AUTH0_SECRET,
-    baseURL: 'https://emailer.amongoose.com',
+    baseURL: process.env.NODE_ENV === 'production' 
+        ? 'https://emailer.amongoose.com'
+        : 'http://localhost:2022',
     clientID: 'mlG3yPtAxgpKXrWlirYVLloaAPAMUG4a',
     issuerBaseURL: 'https://dev-4zromrqu.au.auth0.com'
  };
