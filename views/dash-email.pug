@@ -5,10 +5,13 @@ block head
 
 block content
     h5 Status
-    if !email.posted
+    if email.posted
         p This post is #[a(href=`https://amongoose.com/posts/${email.fileName}`) #[button.btn.btn-outline-success.btn-sm Live]]
 
-        if email.sentNotifications < 
+        if email.sentNotifications.length < 1
+            p No notifications have been sent. #[a(href=`${email.fileName}/notify`) #[button.btn.btn-primary.btn-sm Send notifications]]
+        else
+            p #[button.btn.btn-outline-success.btn-sm=email.sentNotifications.length] notifications have been sent.
     else
         p This post is not live. #[a(href=`${email.fileName}/goLive`) #[button.btn.btn-primary.btn-sm Go live]]
     h5 Content
