@@ -12,7 +12,7 @@ block content
                 th(scope="col") Live
                 th(scope="col") Notifications
         tbody
-            for email in emails
+            for email in emails.reverse()
                 tr(scope="row")
                     td=email.post._frontmatter.title
                     td=moment(email.createdAt).format('HH:mma DD/MM/YYYY')
