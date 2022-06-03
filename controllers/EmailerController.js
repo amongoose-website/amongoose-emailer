@@ -76,8 +76,9 @@ class EmailerController {
             .replace(/"/g, '');
     }
 
-    static async sendNotification(slug) {
-        const email = await Email.findOne({ fileName: slug});
+    static async sendNotification(slug, email) {
+        if (!email) email = await Email.findOne({ fileName: slug});
+
         if (email.sentNotifications.length > 0) 
             return Logger.info('Duplicate notification', `Notification for ${slug} has already been sent`);
         
@@ -136,7 +137,12 @@ class EmailerController {
             .replace('“', '')
             .replace('”', '');
 
-        await EmailerController.sendNotification(slug);
+        // Set posted status to true
+        const email = await Email.findOne({ fileName: slug});
+        email.posted = true;
+        await email.save();
+
+        await EmailerController.sendNotification(slug, email);
 
         // End request
         res.status(200).end();
