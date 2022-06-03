@@ -19,6 +19,7 @@ sendgrid.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Email config
 const { sendgridTemplateId } = require('../config');
+const Settings = require('../models/Settings');
 
 
 class EmailerController {
@@ -143,7 +144,8 @@ class EmailerController {
         await email.save();
 
         // Send auto notification
-        await EmailerController.sendNotification(slug, email);
+        const settings = await Settings.findOne();
+        if (settings.autoNotify) await EmailerController.sendNotification(slug, email);
 
         // End request
         res.status(200).end();

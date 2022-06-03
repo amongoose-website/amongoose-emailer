@@ -27,4 +27,10 @@ router.get('/logs', requiresAuth(), AdminController.renderLogsListPage);
 // Log page
 router.get('/logs/:fileName', requiresAuth(), AdminController.renderLogsPage);
 
+// Settings page
+router.get('/settings', requiresAuth(), AdminController.renderSettingsPage);
+
+// Settings page
+router.post('/settings', requiresAuth(), AdminController.updateSettings);
+
 module.exports = router;

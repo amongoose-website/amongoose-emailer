@@ -18,6 +18,7 @@ const {
     postsPath,
     multerPath
 } = require('../config');
+const Settings = require('../models/Settings');
 
 // Create storage
 const storage = multer.diskStorage({
@@ -106,8 +107,14 @@ class InboundController {
         // Save to DB
         await email.save();
 
-        // Go live
-        res.sendStatus(post.goLive() ? 200 : 500);
+        const settings = await Settings.findOne();
+
+        // Go live if settings to Automatically Publish is on
+        if (settings.autoPublish) {
+            res.sendStatus(post.goLive() ? 200 : 500);
+        } else {
+            res.sendStatus(200);
+        }
     }
 }
 

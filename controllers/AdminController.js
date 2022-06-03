@@ -3,6 +3,7 @@ const moment = require('moment');
 
 const Post = require('../models/Post');
 const Email = require('../models/Email');
+const Settings = require('../models/Settings');
 const EmailerController = require('./EmailerController');
 
 /**
@@ -108,6 +109,25 @@ class AdminController {
         const logs = fs.readFileSync(`logs/${req.params.fileName}`).toString();
         
         res.render('dash-logs', { logs, user, pageTitle: 'Logs' });
+    }
+
+    static async renderSettingsPage(req, res) {
+        const { user } = req.oidc;
+        const settings = await Settings.findOne();
+
+        res.render('dash-settings', { user, settings, pageTitle: 'Settings' });
+    }
+
+    static async updateSettings(req, res) {
+        const settings = await Settings.findOne();
+        
+        // Update settings
+        settings.autoPublish = req.body.autoPublish === 'on';
+        settings.autoNotify = req.body.autoNotify === 'on';
+        await settings.save();
+        
+        res.status(200);
+        res.redirect('/admin/settings');
     }
 }
 

@@ -1,0 +1,16 @@
+extends ./themes/dash.pug
+
+block head
+    title #{pageTitle} | Mongoose Mailer
+
+block content
+    form(action="/admin/settings", method="post")
+        .form-check.form-switch
+            input.form-check-input(type="checkbox" name="autoPublish" role="switch" id="autoPublish" checked=settings.autoPublish)
+            label.form-check-label(for="autoPublish") Automatically publish emails
+            br
+            input.form-check-input(type="checkbox" name="autoNotify" role="switch" id="autoNotify" checked=settings.autoNotify)
+            label.form-check-label(for="autoNotify") Automatically send notifications for new posts
+
+        br
+        button.btn.btn-primary.btn-sm(type="submit") Save Changes
