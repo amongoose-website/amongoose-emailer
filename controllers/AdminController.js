@@ -86,7 +86,7 @@ class AdminController {
             : res.render('error', {code: 500})
     }
 
-    static async postNotification(req, _res, next) {
+    static async postNotification(req, res, next) {
         const { fileName } = req.params;
 
         try {
