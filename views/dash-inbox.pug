@@ -16,10 +16,14 @@ block content
                 tr(scope="row")
                     td=email.post._frontmatter.title
                     td=moment(email.createdAt).format('HH:mma DD/MM/YYYY')
-                    if email.posted
-                        td #[button.btn.btn-outline-success.btn-sm Live]
-                    else
-                        td #[button.btn.btn-outline-secondary.btn-sm.disabled Not live]
+                    pre #{email}
+                    if email.status == 'uploaded'
+                        td #[a(href=`https://amongoose.com/posts/${email.fileName}`) #[button.btn.btn-outline-success.btn-sm Live]]
+                    else if email.status == 'uploading'
+                        td #[button.btn.btn-outline-warning.btn-sm.disabled Uploading]
+                    else if email.status == 'not uploaded'
+                        td #[button.btn.btn-outline-primary.btn-sm.disabled Not uploaded]
+                    
                     if email.sentNotifications.length > 0
                         td #[button.btn.btn-outline-success.btn-sm Sent]
                     else

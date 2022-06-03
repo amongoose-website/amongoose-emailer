@@ -139,7 +139,7 @@ class EmailerController {
 
         // Set posted status to true
         const email = await Email.findOne({ fileName: slug});
-        email.posted = true;
+        email.status = 'uploaded';
         await email.save();
 
         await EmailerController.sendNotification(slug, email);

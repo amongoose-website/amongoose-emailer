@@ -107,7 +107,7 @@ class InboundController {
         await email.save();
 
         // Go live
-        // res.sendStatus(post.goLive() ? 200 : 500);
+        res.sendStatus(post.goLive() ? 200 : 500);
     }
 }
 

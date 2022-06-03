@@ -11,11 +11,11 @@ const emailSchema = new Schema({
         unique: false,
         required: true
     },
-    posted: {
-        type: Boolean,
+    status: {
+        type: String,
         unique: false,
         required: true,
-        default: false
+        default: 'uploading'
     },
     sentNotifications: {
         type: Array,
