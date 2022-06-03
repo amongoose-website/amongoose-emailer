@@ -142,7 +142,7 @@ class EmailerController {
         email.status = 'uploaded';
         await email.save();
 
-        await EmailerController.sendNotification(slug, email);
+        // await EmailerController.sendNotification(slug, email);
 
         // End request
         res.status(200).end();
