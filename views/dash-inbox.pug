@@ -16,7 +16,7 @@ block content
                 tr(scope="row")
                     td=email.post._frontmatter.title
                     td=moment(email.createdAt).format('HH:mma DD/MM/YYYY')
-                    pre #{email}
+                    
                     if email.status == 'uploaded'
                         td #[a(href=`https://amongoose.com/posts/${email.fileName}`) #[button.btn.btn-outline-success.btn-sm Live]]
                     else if email.status == 'uploading'
