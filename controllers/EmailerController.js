@@ -77,8 +77,8 @@ class EmailerController {
             .replace(/"/g, '');
     }
 
-    static async sendNotification(slug, email) {
-        if (!email) email = await Email.findOne({ fileName: slug});
+    static async sendNotification(slug) {
+        const email = await Email.findOne({ fileName: slug});
 
         if (email.sentNotifications.length > 0) 
             return Logger.info('Duplicate notification', `Notification for ${slug} has already been sent`);
