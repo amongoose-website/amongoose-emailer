@@ -78,7 +78,7 @@ class EmailerController {
     }
 
     static async sendNotification(slug) {
-        return new Promise((res, rej) => {
+        return new Promise(async (res, rej) => {
             const email = await Email.findOne({ fileName: slug});
 
             if (email.sentNotifications.length > 0) 
