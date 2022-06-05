@@ -78,50 +78,53 @@ class EmailerController {
     }
 
     static async sendNotification(slug) {
-        const email = await Email.findOne({ fileName: slug});
+        return new Promise((res, rej) => {
+            const email = await Email.findOne({ fileName: slug});
 
-        if (email.sentNotifications.length > 0) 
-            return Logger.info('Duplicate notification', `Notification for ${slug} has already been sent`);
-        
-        const postData = await EmailerController.fetchPostData(slug);
+            if (email.sentNotifications.length > 0) 
+                return Logger.info('Duplicate notification', `Notification for ${slug} has already been sent`);
+            
+            const postData = await EmailerController.fetchPostData(slug);
 
-        const bcc = (await Bcc.find({ 
-            subscribed: true, 
-            groups: postData.groups 
-        }))
-            .map(item => ({
-                name: item.name,
-                email: item.email
-            }));
+            const bcc = (await Bcc.find({ 
+                subscribed: true, 
+                groups: postData.groups 
+            }))
+                .map(item => ({
+                    name: item.name,
+                    email: item.email
+                }));
 
-        const emailTitle = postData.title.replace(/(&quot;)/g, '');
-        const dynamicTemplateData ={
-            author: postData.author,
-            title: postData.title,
-            date: postData.date,
-            postUrl: `https://amongoose.com/posts/${slug}/`,
-            subject: `New Post: ${emailTitle}`
-        };
+            const emailTitle = postData.title.replace(/(&quot;)/g, '');
+            const dynamicTemplateData ={
+                author: postData.author,
+                title: postData.title,
+                date: postData.date,
+                postUrl: `https://amongoose.com/posts/${slug}/`,
+                subject: `New Post: ${emailTitle}`
+            };
 
-        // Send email
-        await sendgrid.send({
-            personalizations: [{
-                to: 'info@amongoose.com',
-                bcc
-            }],
-            from: process.env.EMAIL_FROM,
-            dynamicTemplateData,
-            templateId: sendgridTemplateId
-        }).then(async () => {
-            Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent to bcc list ${postData.groups}.`);
-            email.sentNotifications.push({
-                sentAt: new Date(),
-                bcc,
-                data: dynamicTemplateData
+            // Send email
+            await sendgrid.send({
+                personalizations: [{
+                    to: 'info@amongoose.com',
+                    bcc
+                }],
+                from: process.env.EMAIL_FROM,
+                dynamicTemplateData,
+                templateId: sendgridTemplateId
+            }).then(async () => {
+                Logger.success('Post Notification', `Email notification for post: ${postData.title} has been sent to bcc list ${postData.groups}.`);
+                email.sentNotifications.push({
+                    sentAt: new Date(),
+                    bcc,
+                    data: dynamicTemplateData
+                });
+                await email.save();
+                res(email);
+            }).catch(error => {
+                rej(error);
             });
-            await email.save();
-        }).catch(error => {
-            Logger.error('Post Notification', error);
         });
     }
 
@@ -145,7 +148,14 @@ class EmailerController {
 
         // Send auto notification
         const settings = await Settings.findOne();
-        if (settings.autoNotify) await EmailerController.sendNotification(slug, email);
+        if (settings.autoNotify) {
+            // No await here to avoid double triggers of Netlify
+            // when 200 response hasn't been received fast enough.
+            EmailerController.sendNotification(slug, email)
+                .catch(error => {
+                    Logger.error('Deploy succeeded script', error);
+                })
+        }
 
         // End request
         res.status(200).end();
