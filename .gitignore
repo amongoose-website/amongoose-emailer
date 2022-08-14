@@ -5,4 +5,4 @@ package-lock.json
 config.js
 ecosystem.config.js
 logs
-.env**
+**/.**env**
