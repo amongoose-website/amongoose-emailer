@@ -1,5 +1,6 @@
 const fs = require('fs');
 const moment = require('moment');
+const Redis = require('ioredis'); 
 
 const Post = require('../models/Post');
 const Email = require('../models/Email');
@@ -60,15 +61,30 @@ class AdminController {
      */
     static async renderInboxPage(req, res) {
         const user = req.oidc.user;
+        const redis = new Redis(process.env.REDIS_URL);
+        
+        let cache = await redis.get('inbox');
+        if (cache) {
+            cache = JSON.parse(cache); 
+            res.render('dash-inbox', { 
+                user,
+                emails: cache.map(email => {
+                    email.post = new Post(email.parsedEmail)
+                    return email;
+                }), 
+                pageTitle: 'Inbox',
+                moment
+            });
+        }      
+           
         const emails = await Email.find();
-        
-        
-        res.render('dash-inbox', { 
+        redis.set('inbox', JSON.stringify(emails));
+        if (!cache) return res.render('dash-inbox', {
             user,
             emails: emails.map(email => {
-                email.post = new Post(email.parsedEmail)
+                email.post = new Post(email.parsedEmail);
                 return email;
-            }), 
+            }),
             pageTitle: 'Inbox',
             moment
         });

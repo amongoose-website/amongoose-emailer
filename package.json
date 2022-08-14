@@ -23,6 +23,7 @@
     "express-openid-connect": "^2.7.2",
     "express-pug": "^1.0.0",
     "express-rate-limit": "^6.0.4",
+    "ioredis": "^5.2.2",
     "mailparser": "^3.4.0",
     "moment": "^2.29.3",
     "mongodb": "^4.1.4",
