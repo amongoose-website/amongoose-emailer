@@ -25,7 +25,12 @@ class Post {
 
         // Assign filename in format: 2022-03-03-SUBJECT-HERE.md
         this._DATE = moment(this.email.date).format('YYYY-MM-DD');
-        this._SUBJECT = sanitiseFileName(this.email.subject.replace(/\s+/g, '-').toLowerCase());
+        this._SUBJECT = sanitiseFileName(
+            this.email.subject
+                .replace(/\s+/g, '-')
+                .replace(/'|"/g, '')
+                .toLowerCase()
+        );
         this.fileName = `${this._DATE}-${this._SUBJECT}`;
         this.fileExt = '.md';
 
