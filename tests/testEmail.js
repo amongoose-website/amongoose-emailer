@@ -24,11 +24,11 @@ async function sendEmail(data) {
             name: item.name,
             email: item.email
         }));
+    console.log(bcc);
     
     await sendgrid.send({
         personalizations: [{
-            to: 'info@amongoose.com',
-            bcc
+            to: 'ins-umbyu6xr@isnotspam.com',
         }],
         from: process.env.EMAIL_FROM,
         subject: `New Post: ${data.title}`,
